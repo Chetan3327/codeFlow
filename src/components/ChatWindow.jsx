@@ -16,7 +16,10 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
       role: 'ai'
     }
   ]
-  const [chatData, setChatData] = useState(data)
+  const [chatData, setChatData] = useState(JSON.parse(localStorage.getItem('chat')) || data)
+  useEffect(() => {
+    localStorage.setItem('chat', JSON.stringify(chatData))
+  }, [chatData])
 
 
   const chatContainerRef = useRef(null)
