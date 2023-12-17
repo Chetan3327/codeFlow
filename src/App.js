@@ -14,6 +14,7 @@ import ChatWindow from './components/ChatWindow'
 // import parserBabel from 'prettier/parser-babel';
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const App = () => {
   // folderData for palm inner code
   const [explorerData, setExplorerData] = useState(JSON.parse(localStorage.getItem('htmlCode')) || htmlCode)
@@ -24,7 +25,7 @@ const App = () => {
   const [icon, setIcon] = useState(<VscChromeClose />)
   const [showOverlay, setShowOverlay] = useState(false)
   const [srcDoc, setSrcDoc] = useState(`
-  <!DOCTYPE html>
+    <!DOCTYPE html>
     <html style="height:100%">
         <head>
             <meta charset="UTF-8" />
@@ -108,6 +109,7 @@ const App = () => {
     setExplorerData(updatedTree)
     setIcon(<VscChromeClose />)
     localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
+    compileCode()
   }
 
   const codeComplete = () => {
@@ -121,7 +123,23 @@ const App = () => {
 
   const compileCode = () => {
     setShowOutPane(true)
-    saveCode()
+    if(currentFile.name.split('.')[1] === 'py'){
+      axios.post(`${BACKEND_URL}/execute/python`, {code: currentFile.code}).then((response) => {
+        console.log(response)
+        console.log(response.data.output)
+        setSrcDoc(`
+        <!DOCTYPE html>
+        <html style="height:100%">
+            <head>
+                <meta charset="UTF-8" />
+                <link href="https://fonts.cdnfonts.com/css/cascadia-code" rel="stylesheet">
+            </head>
+            <body style="height:100%; background-color: black; color: white">${response.data.output}</body>
+        </html>`)
+      })
+      return
+    }
+    // saveCode()
     const result = findNode(explorerData, 'index.html')
     let htmlCode = result.code
     console.log(htmlCode)
@@ -173,7 +191,6 @@ const App = () => {
   
   return (
     <div className='flex min-h-screen bg-[#1e1e1e]' onKeyDown={(e) => handleKeyDown(e)} tabIndex={0}> 
-      {showChatWindow && <ChatWindow setShowChatWindow={setShowChatWindow} getFileNames={getFileNames} getNode={getNode} />}
       <button className='absolute bottom-0 left-0 p-2 bg-[#282828] text-white z-10' onClick={() => setShowExplorer(!showExplorer)}>{showExplorer ? <VscChevronLeft /> : <VscChevronRight /> }</button>
       {showExplorer &&
       (<div className='bg-[#282828] text-white flex flex-col py-5 pl-3 gap-2 w-[15vw]'>
@@ -202,6 +219,7 @@ const App = () => {
       </div>)}
 
       {showOverlay && <Overlay setShowOverlay={setShowOverlay} />}
+      {showChatWindow && <ChatWindow setShowChatWindow={setShowChatWindow} getFileNames={getFileNames} getNode={getNode} />}
     </div>
   )
 }

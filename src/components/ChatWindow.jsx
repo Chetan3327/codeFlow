@@ -1,15 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import Draggable from 'react-draggable'
+import { VscLoading } from 'react-icons/vsc';
 import ReactMarkdown from 'react-markdown'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
 const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [width, setWidth] = useState('50%')
   const [height, setHeight] = useState('60%')
   const [query, setQuery] = useState("")
   const [context, setContext] = useState("")
+  const [loading, setLoading] = useState(false)
   const data = [
     {
       message: 'Hi! How can I help you today?',
@@ -23,12 +24,6 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
 
 
   const chatContainerRef = useRef(null)
-  
-  // const handleDrag = (e, ui) => {
-  //   const { x, y } = position;
-  //   console.log(position)
-  //   setPosition({ x: x + ui.deltaX, y: y + ui.deltaY });
-  // };
   const handleKeyDown = (e) => {
     if(e.key === 'Enter'){
       conversation()
@@ -49,6 +44,7 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
         {}
       ]
     })
+    setLoading(true)
     axios.post(`${PYTHON_URL}/conversation_chain.conversation/run`, {
       "history": "string",
       "input": context + query,
@@ -57,6 +53,7 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
       ]
     }).then((response) => {
       console.log(response.data)
+      setLoading(false)
       setChatData((chatData) => [...chatData, {message: response.data.output, role: 'ai'}])
     })
   }
@@ -73,9 +70,8 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
       setHeight('60%')
     }
   }
-  const appendContext = () => {
-    const files = getFileNames()
-    console.log(files)
+  const clearChat = () => {
+    setChatData(data)
   }
   const handleFileChange = (e) => {
     const {name, value} = e.target
@@ -95,13 +91,14 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
           <div className='bg-[#1c1b2d] w-full flex items-center gap-1 pl-2 cursor-move drag-handle py-1.5'>
             <button onClick={() => setShowChatWindow(false)} className='p-1.5 bg-red-600 rounded-full'></button>
             <button onClick={() => toggleSize()} className='p-1.5 bg-yellow-600 rounded-full'></button>
-            <button onClick={() => appendContext()} className='p-1.5 bg-green-600 rounded-full'></button>
+            <button onClick={() => clearChat()} className='p-1.5 bg-green-600 rounded-full'></button>
             <span className='text-gray-500 pl-2'>Luna</span>
           </div>
-          <div className='h-full flex flex-col my-4 overflow-y-auto' ref={chatContainerRef}>
+          <div className='h-full flex flex-col my-4 overflow-y-auto no-scrollbar' ref={chatContainerRef}>
             {chatData.map((chat, idx) => {
               return (<MessageCard key={idx} message={chat.message} role={chat.role} />)
             })}
+            {loading && (<span className='px-4 py-2 my-1 mx-2 rounded-bl-lg bg-[#1c1b2d] text-left'><VscLoading className='animate-spin' /></span>)}
           </div>
           <div className='w-full flex p-1'>
             <input type="text" onKeyDown={(e) => handleKeyDown(e)} value={query} onChange={(e) => setQuery(e.target.value)} className='w-full p-2 outline-none bg-[#1c1b2d] rounded-md' placeholder='Message Luna...' />
