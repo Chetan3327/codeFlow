@@ -55,7 +55,13 @@ const New = () => {
       id: id,
       name: name,
       type: type,
-      data: data
+      data: data,
+      chat: [
+        {
+          message: 'Hi! How can I help you today?',
+          role: 'ai'
+        }
+      ]
     }
     localStorage.setItem(id, JSON.stringify(value))
     const createdProjects = JSON.parse(localStorage.getItem('createdProjects'))
@@ -99,7 +105,7 @@ const New = () => {
       <div className='bg-[#282828] w-[90%] mt-20 flex flex-wrap p-5 gap-5'>
         {createdProjects.map((project, idx) => {
           return (
-            <div key={idx} className='group/delete bg-[#37373d] p-10 cursor-pointer rounded hover:shadow-xl shadow-white flex flex-col items-center relative'>
+            <div key={idx} onClick={() => navigate(`/${project.id}`)} className='group/delete bg-[#37373d] p-10 cursor-pointer rounded hover:shadow-xl shadow-white flex flex-col items-center relative'>
               <MdDelete color='white' className='group-hover/delete:visible invisible absolute top-0 right-0 mt-2 mr-2' onClick={() => deleteProject(project.id)} />
               {getLogo(project.type)}
               <span className='text-white'>{project.name}</span>

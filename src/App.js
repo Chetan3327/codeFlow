@@ -234,7 +234,7 @@ const App = () => {
       </div>)}
 
       {showOverlay && <Overlay setShowOverlay={setShowOverlay} />}
-      {showChatWindow && <ChatWindow setShowChatWindow={setShowChatWindow} getFileNames={getFileNames} getNode={getNode} />}
+      {showChatWindow && <ChatWindow setShowChatWindow={setShowChatWindow} getFileNames={getFileNames} getNode={getNode} id={id} />}
       {showCommandPalette && <CommandPalette getFileNames={getFileNames} getNode={getNode} setCurrentFile={setCurrentFile} setShowCommandPalette={setShowCommandPalette} />}
     </div>
   )

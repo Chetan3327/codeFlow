@@ -5,7 +5,7 @@ import { VscLoading } from 'react-icons/vsc';
 import ReactMarkdown from 'react-markdown'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
-const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
+const ChatWindow = ({setShowChatWindow, getFileNames, getNode, id}) => {
   const [width, setWidth] = useState('50%')
   const [height, setHeight] = useState('60%')
   const [query, setQuery] = useState("")
@@ -13,13 +13,15 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode}) => {
   const [loading, setLoading] = useState(false)
   const data = [
     {
-      message: 'Hi! How can I help you today?',
+      message: 'Hi there! How can I help you today?',
       role: 'ai'
     }
   ]
-  const [chatData, setChatData] = useState(JSON.parse(localStorage.getItem('chat')) || data)
+  const [chatData, setChatData] = useState(JSON.parse(localStorage.getItem(`${id}`)).chat || data)
   useEffect(() => {
-    localStorage.setItem('chat', JSON.stringify(chatData))
+    let data = JSON.parse(localStorage.getItem(`${id}`))
+    data = {...data, chat: chatData}
+    localStorage.setItem(`${id}`, JSON.stringify(data))
   }, [chatData])
 
 
