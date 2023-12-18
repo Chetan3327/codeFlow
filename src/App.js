@@ -10,6 +10,7 @@ import {linkTagRegex, scriptTagRegex} from './utils/regex'
 import {detectLanguage} from './utils/detectLanguage'
 import Overlay from './components/Overlay'
 import ChatWindow from './components/ChatWindow'
+import CommandPalette from './components/CommandPalette'
 // import prettier from 'prettier/standalone';
 // import parserBabel from 'prettier/parser-babel';
 
@@ -21,9 +22,10 @@ const App = () => {
   const [currentFile, setCurrentFile] = useState(null)
   const [showOutputPane, setShowOutPane] = useState(false)
   const [showExplorer, setShowExplorer] = useState(true)
-  const [showChatWindow, setShowChatWindow] = useState(true)
+  const [showChatWindow, setShowChatWindow] = useState(false)
   const [icon, setIcon] = useState(<VscChromeClose />)
   const [showOverlay, setShowOverlay] = useState(false)
+  const [showCommandPalette, setShowCommandPalette] = useState(true)
   const [srcDoc, setSrcDoc] = useState(`
     <!DOCTYPE html>
     <html style="height:100%">
@@ -83,6 +85,10 @@ const App = () => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'k'){
       e.preventDefault()
       setShowOverlay(true)
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p'){
+      e.preventDefault()
+      setShowCommandPalette(true)
     }
     if(e.key === 'Escape'){
       setShowOverlay(false)
@@ -226,6 +232,7 @@ const App = () => {
 
       {showOverlay && <Overlay setShowOverlay={setShowOverlay} />}
       {showChatWindow && <ChatWindow setShowChatWindow={setShowChatWindow} getFileNames={getFileNames} getNode={getNode} />}
+      {showCommandPalette && <CommandPalette getFileNames={getFileNames} getNode={getNode} setCurrentFile={setCurrentFile} setShowCommandPalette={setShowCommandPalette} />}
     </div>
   )
 }
