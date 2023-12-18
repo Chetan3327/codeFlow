@@ -21,7 +21,7 @@ const CommandPalette = ({getFileNames, getNode, setCurrentFile, setShowCommandPa
     <div className='absolute w-full flex justify-center text-sm'>
       <div className='bg-[#252526] flex flex-col p-2 pt-3 w-[30vw] rounded-md mt-3 shadow-2xl'>
         <div className='w-full flex flex-1 items-center'>
-          <input type="text" autoFocus className='p-1 rounded bg-[#2a2d2e] text-white outline outline-1 outline-slate-400 w-full' onChange={(e) => setSearch(e.target.value)} placeholder='Search file by name' />
+          <input type="text" autoFocus className='p-1 rounded bg-[#2a2d2e] text-white outline outline-1 outline-[#1b5fb2] w-full' onChange={(e) => setSearch(e.target.value)} placeholder='Search file by name' />
           <VscChromeClose className='m-1 cursor-pointer' onClick={() => setShowCommandPalette(false)} color='white' />
         </div>
         <div className='flex flex-col gap-1 text-white py-1 overflow-y-auto no-scrollbar'>

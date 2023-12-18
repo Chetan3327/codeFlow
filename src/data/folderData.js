@@ -110,4 +110,35 @@ export const htmlCode = {
     ]
 }
 
+export const pythonCode = {
+    id: "1",
+    name: "root",
+    isFolder: true,
+    code: '',
+    items: [
+        {
+            id: '2',
+            name: 'main.py',
+            isFolder: false,
+            code: '',
+            items: []
+        }
+    ]
+}
+export const jsCode = {
+    id: "1",
+    name: "root",
+    isFolder: true,
+    code: '',
+    items: [
+        {
+            id: '2',
+            name: 'index.js',
+            isFolder: false,
+            code: '',
+            items: []
+        }
+    ]
+}
+
 export default folderData;

@@ -13,19 +13,22 @@ import ChatWindow from './components/ChatWindow'
 import CommandPalette from './components/CommandPalette'
 // import prettier from 'prettier/standalone';
 // import parserBabel from 'prettier/parser-babel';
+import {useParams} from 'react-router-dom'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const App = () => {
   // folderData for palm inner code
-  const [explorerData, setExplorerData] = useState(JSON.parse(localStorage.getItem('htmlCode')) || htmlCode)
+  const {id} = useParams()
+  const data = JSON.parse(localStorage.getItem(id))
+  const [explorerData, setExplorerData] = useState(data.data || htmlCode)
   const [currentFile, setCurrentFile] = useState(null)
   const [showOutputPane, setShowOutPane] = useState(false)
   const [showExplorer, setShowExplorer] = useState(true)
   const [showChatWindow, setShowChatWindow] = useState(false)
   const [icon, setIcon] = useState(<VscChromeClose />)
   const [showOverlay, setShowOverlay] = useState(false)
-  const [showCommandPalette, setShowCommandPalette] = useState(true)
+  const [showCommandPalette, setShowCommandPalette] = useState(false)
   const [srcDoc, setSrcDoc] = useState(`
     <!DOCTYPE html>
     <html style="height:100%">
