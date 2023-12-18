@@ -116,7 +116,13 @@ const App = () => {
     axios.post(`${PYTHON_URL}/llm_chain.chain/run`, {code: currentFile.code, file_name: currentFile.name}).then((response) => {
       console.log(response.data.output)
       // const code = currentFile.code + '\n' + response.data.output
-      const code = response.data.output
+      let code = response.data.output
+      if(code.endsWith('```')){
+        console.log('stripping first and last line')
+        let lines = code.split('\n');
+        lines = lines.slice(1, -1);
+        code = lines.join('\n');
+      }
       setCurrentFile({...currentFile, code: code})
     })
   }
