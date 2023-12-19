@@ -74,7 +74,8 @@ const New = () => {
     localStorage.setItem('createdProjects', JSON.stringify(createdProjects))
     navigate(`/${id}`)
   }
-  const deleteProject = (Projectid) => {
+  const deleteProject = (e, Projectid) => {
+    e.stopPropagation()
     const createdProjectsIds = JSON.parse(localStorage.getItem('createdProjects'))
     const updatedProjects = createdProjectsIds.filter((id) => id !== Projectid)
     localStorage.setItem('createdProjects', JSON.stringify(updatedProjects))
@@ -106,12 +107,13 @@ const New = () => {
         {createdProjects.map((project, idx) => {
           return (
             <div key={idx} onClick={() => navigate(`/${project.id}`)} className='group/delete bg-[#37373d] p-10 cursor-pointer rounded hover:shadow-xl shadow-white flex flex-col items-center relative'>
-              <MdDelete color='white' className='group-hover/delete:visible invisible absolute top-0 right-0 mt-2 mr-2' onClick={() => deleteProject(project.id)} />
+              <MdDelete color='white' className='group-hover/delete:visible invisible absolute top-0 right-0 mt-2 mr-2' onClick={(e) => deleteProject(e, project.id)} />
               {getLogo(project.type)}
               <span className='text-white'>{project.name}</span>
             </div>
           )
         })}
+        {createdProjects.length === 0 && (<p className='text-white'>No Projects Yet.</p>)}
       </div>
  
       {showOverlay && (<CreateNewOverlay setName={setName} type={type} setType={setType} types={types} CreateNew={CreateNew} setShowOverlay={setShowOverlay} />)}

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 import { VscLoading } from 'react-icons/vsc';
 import ReactMarkdown from 'react-markdown'
+import CodeHighlighter from './CodeHighlighter'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
 const ChatWindow = ({setShowChatWindow, getFileNames, getNode, id}) => {
