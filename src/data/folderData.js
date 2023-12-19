@@ -140,5 +140,12 @@ export const jsCode = {
         }
     ]
 }
+export const EmptyCode = {
+    id: "1",
+    name: "root",
+    isFolder: true,
+    code: '',
+    items: []
+}
 
 export default folderData;
