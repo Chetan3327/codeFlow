@@ -48,6 +48,14 @@ const Overlay = ({setShowOverlay}) => {
                         </tr>
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <span className='flex gap-1 items-center'>Open Command Palette</span>
+                            </th>
+                            <td class="px-6 py-4">
+                                Ctrl + P
+                            </td>
+                        </tr>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 Save File
                             </th>
                             <td class="px-6 py-4">

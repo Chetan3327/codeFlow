@@ -14,6 +14,7 @@ import CommandPalette from './components/CommandPalette'
 // import prettier from 'prettier/standalone';
 // import parserBabel from 'prettier/parser-babel';
 import {useParams} from 'react-router-dom'
+import Empty from './components/Empty'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
@@ -54,7 +55,11 @@ const App = () => {
   const handleInsertNode = (folderId, item, isFolder) => {
     const updatedTree = insertNode(explorerData, folderId, item, isFolder)
     setExplorerData(updatedTree)
-    localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
+    let data = JSON.parse(localStorage.getItem(`${id}`))
+    data = {...data, data: updatedTree}
+    localStorage.setItem(`${id}`, JSON.stringify(data))
+
+    // localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
   }
   const handleDeleteNode = (targetId) => {
     if(currentFile?.id === targetId){
@@ -65,7 +70,9 @@ const App = () => {
     }
     const updatedTree = deleteNode(explorerData, targetId)
     setExplorerData(updatedTree)
-    localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
+    let data = JSON.parse(localStorage.getItem(`${id}`))
+    data = {...data, data: updatedTree}
+    localStorage.setItem(`${id}`, JSON.stringify(data))
   }
   const handleKeyDown = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
@@ -110,14 +117,23 @@ const App = () => {
     setCurrentFile({...currentFile, code: value})
     setIcon(<VscCircleFilled />)
   }
-  const saveAll = (data) => {
-    localStorage.setItem('htmlCode', JSON.stringify(data || explorerData))
+  const saveAll = () => {
+    let data = JSON.parse(localStorage.getItem(`${id}`))
+    data = {...data, data: explorerData}
+    localStorage.setItem(`${id}`, JSON.stringify(data))
+
+    // localStorage.setItem('htmlCode', JSON.stringify(data || explorerData))
   }
   const saveCode = () => {
     const updatedTree = updateNode(explorerData, currentFile.id, currentFile.code)
     setExplorerData(updatedTree)
     setIcon(<VscChromeClose />)
-    localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
+
+    let data = JSON.parse(localStorage.getItem(`${id}`))
+    data = {...data, data: updatedTree}
+    localStorage.setItem(`${id}`, JSON.stringify(data))
+
+    // localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
     compileCode()
   }
 
@@ -209,7 +225,7 @@ const App = () => {
       <button className='absolute bottom-0 left-0 p-2 bg-[#282828] text-white z-10' onClick={() => setShowExplorer(!showExplorer)}>{showExplorer ? <VscChevronLeft /> : <VscChevronRight /> }</button>
       {showExplorer &&
       (<div className='bg-[#282828] text-white flex flex-col py-5 pl-3 gap-2 w-[15vw]'>
-        <h3 className='text-md text-gray-500 flex gap-2 items-center'><VscCode color='cyan' size={30} />CodeFlow</h3>
+        <h3 className='text-md text-gray-500 flex gap-2 items-center text-xl'><VscCode color='cyan' size={30} />{JSON.parse(localStorage.getItem(`${id}`)).name}</h3>
         <Folder data={explorerData} handleInsertNode={handleInsertNode} currentFile={currentFile} setCurrentFile={setCurrentFile} handleDeleteNode={handleDeleteNode} />
       </div>)}
       {currentFile ? (
@@ -225,8 +241,8 @@ const App = () => {
                 <button onClick={() => setShowOverlay(true)}><VscRecordKeys /></button>
               </div>
           </div>
-          <Editor height='95vh' value={currentFile.code} onChange={(value) => handleInput(value)} width={calculateWidth()} language={detectLanguage(currentFile.name.split('.')[1])} theme='vs-dark'/>
-      </div>) : (<div className='flex items-center justify-center w-full text-white'>No file Selected</div>)}
+          <Editor height='95vh' className='mt-1' value={currentFile.code} onChange={(value) => handleInput(value)} width={calculateWidth()} language={detectLanguage(currentFile.name.split('.')[1])} theme='vs-dark'/>
+      </div>) : (<Empty />)}
       <button className='absolute bottom-0 right-0 p-2 bg-[#282828] text-white z-10' onClick={() => setShowOutPane(!showOutputPane)}>{showOutputPane ? <VscChevronRight /> : <VscChevronLeft /> }</button>
       {showOutputPane &&
       (<div className='bg-white w-[20vw] absolute top-0 right-0 h-[100vh]'>
