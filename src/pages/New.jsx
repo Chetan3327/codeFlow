@@ -143,7 +143,7 @@ const New = () => {
 const CreateNewOverlay = ({setName, setType, types, CreateNew, setShowOverlay, type, error}) => {
   return (
     <div className='absolute min-h-screen w-full flex items-center justify-center z-50 bg-black/80 bg-blend-overlay'>
-      <div className='p-10 bg-[#282828] flex flex-col mb-32 gap-3 w-[30vw]'>
+      <div className='p-10 bg-[#282828] flex flex-col mb-32 gap-3 md:w-[30vw]'>
         <input autoFocus type="text" className='p-2 rounded bg-[#2a2d2e] text-white w-full' placeholder='Name' onChange={(e) => setName(e.target.value)} />
         <select className='bg-[#37373d] rounded p-2 text-white' onChange={(e) => setType(e.target.value)} value={type} >
           <option value="">Select Template</option>
@@ -151,7 +151,7 @@ const CreateNewOverlay = ({setName, setType, types, CreateNew, setShowOverlay, t
             return (<option key={idx} value={type.type}>{type.type}</option>)
           })}
         </select>
-        <div className='flex gap-2 w-full'>
+        <div className='flex flex-col md:flex-row gap-2 w-full'>
           <button className='text-white px-4 p-2 bg-black rounded-md w-full' onClick={() => CreateNew()}>Create</button>
           <button className='px-4 p-2 bg-white text-black rounded-md w-full' onClick={() => setShowOverlay(false)}>Cancel</button>
         </div>
