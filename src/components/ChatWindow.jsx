@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 import { VscLoading } from 'react-icons/vsc';
 import ReactMarkdown from 'react-markdown'
-import CodeHighlighter from './CodeHighlighter'
+// import CodeHighlighter from './CodeHighlighter'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
 const ChatWindow = ({setShowChatWindow, getFileNames, getNode, id}) => {
@@ -34,19 +34,19 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode, id}) => {
   }
 
   const conversation = () => {
-    console.log('object')
+    // console.log('object')
     if(!query){
       return
     }
     setQuery("")
     setChatData((chatData) => [...chatData, {message: query, role: 'user'}])
-    console.log({
-      "history": "string",
-      "input": context + query,
-      "memory": [
-        {}
-      ]
-    })
+    // console.log({
+    //   "history": "string",
+    //   "input": context + query,
+    //   "memory": [
+    //     {}
+    //   ]
+    // })
     setLoading(true)
     axios.post(`${PYTHON_URL}/conversation_chain.conversation/run`, {
       "history": "string",
@@ -55,13 +55,13 @@ const ChatWindow = ({setShowChatWindow, getFileNames, getNode, id}) => {
         {}
       ]
     }).then((response) => {
-      console.log(response.data)
+      // console.log(response.data)
       setLoading(false)
       setChatData((chatData) => [...chatData, {message: response.data.output, role: 'ai'}])
     })
   }
   useEffect(() => {
-    console.log('scroll')
+    // console.log('scroll')
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
   }, [chatData])
   const toggleSize = () => {

@@ -5,7 +5,6 @@ const CommandPalette = ({getFileNames, getNode, setCurrentFile, setShowCommandPa
   const [search, setSearch] = useState('')
   const allFiles = getFileNames()
   const [files, setFiles] = useState(allFiles)
-  console.log(files)
   useEffect(() => {
     const filteredFiles = allFiles.filter((file) =>
       file.toLowerCase().includes(search.toLowerCase())

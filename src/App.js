@@ -13,7 +13,7 @@ import ChatWindow from './components/ChatWindow'
 import CommandPalette from './components/CommandPalette'
 // import prettier from 'prettier/standalone';
 // import parserBabel from 'prettier/parser-babel';
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import Empty from './components/Empty'
 
 const PYTHON_URL = process.env.REACT_APP_PYTHON_URL
@@ -21,6 +21,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const App = () => {
   // folderData for palm inner code
   const {id} = useParams()
+  const navigate = useNavigate()
   const data = JSON.parse(localStorage.getItem(id))
   const [explorerData, setExplorerData] = useState(data.data || htmlCode)
   const [currentFile, setCurrentFile] = useState(null)
@@ -128,13 +129,13 @@ const App = () => {
     const updatedTree = updateNode(explorerData, currentFile.id, currentFile.code)
     setExplorerData(updatedTree)
     setIcon(<VscChromeClose />)
+    // compileCode()
 
     let data = JSON.parse(localStorage.getItem(`${id}`))
     data = {...data, data: updatedTree}
     localStorage.setItem(`${id}`, JSON.stringify(data))
 
     // localStorage.setItem('htmlCode', JSON.stringify(updatedTree))
-    compileCode()
   }
 
   const codeComplete = () => {
@@ -154,10 +155,9 @@ const App = () => {
 
   const compileCode = () => {
     setShowOutPane(true)
+
     if(currentFile.name.split('.')[1] === 'py'){
       axios.post(`${BACKEND_URL}/execute/python`, {code: currentFile.code}).then((response) => {
-        console.log(response)
-        console.log(response.data.output)
         setSrcDoc(`
         <!DOCTYPE html>
         <html style="height:100%">
@@ -170,44 +170,32 @@ const App = () => {
       })
       return
     }
-    // saveCode()
+    
     const result = findNode(explorerData, 'index.html')
     let htmlCode = result.code
-    console.log(htmlCode)
     setSrcDoc(htmlCode)
-    console.log(htmlCode.includes('link'))
-
-    console.log(typeof(result.code))
-   
     const matches = [...htmlCode.matchAll(linkTagRegex)];
-    console.log(matches)
-
     if(matches){
       const cssFileNames = matches.map((match) => match[1])
-      console.log(cssFileNames)
       cssFileNames.map((fileName) => {
         const cssFileNode = findNode(explorerData, fileName);
         htmlCode = htmlCode.replace('</head>', `<style>${cssFileNode.code}</style></head>`);
       })
-      console.log(htmlCode)
       // setSrcDoc(htmlCode)
-    
     }
 
     const jsMatches = [...htmlCode.matchAll(scriptTagRegex)];
-    console.log(jsMatches)
 
     if(jsMatches){
       const jsFileNames = jsMatches.map((match) => match[1])
-      console.log(jsFileNames)
       jsFileNames.map((fileName) => {
         const jsFileNode = findNode(explorerData, fileName);
         htmlCode = htmlCode.replace('</body>', `<script>${jsFileNode.code}</script></body>`);
       })
-      console.log(htmlCode)
       setSrcDoc(htmlCode)
     }
   }
+
   const formatCode = () => {
     console.log(currentFile.code)
   }
@@ -225,20 +213,20 @@ const App = () => {
       <button className='absolute bottom-0 left-0 p-2 bg-[#282828] text-white z-10' onClick={() => setShowExplorer(!showExplorer)}>{showExplorer ? <VscChevronLeft /> : <VscChevronRight /> }</button>
       {showExplorer &&
       (<div className='bg-[#282828] text-white flex flex-col py-5 pl-3 gap-2 w-[15vw]'>
-        <h3 className='text-md text-gray-500 flex gap-2 items-center text-xl'><VscCode color='cyan' size={30} />{JSON.parse(localStorage.getItem(`${id}`)).name}</h3>
+        <h3 className='text-md text-gray-500 flex gap-2 items-center text-xl'><VscCode color='cyan' className='cursor-pointer' size={30} onClick={() => navigate('/')} />{JSON.parse(localStorage.getItem(`${id}`)).name}</h3>
         <Folder data={explorerData} handleInsertNode={handleInsertNode} currentFile={currentFile} setCurrentFile={setCurrentFile} handleDeleteNode={handleDeleteNode} />
       </div>)}
       {currentFile ? (
       <div className='flex-1 text-white'>
           <div style={{width: calculateWidth()}} className={`h-[5vh] bg-[#282828] flex justify-between`}>
               <button className='text-white text-sm h-[5vh] px-4 bg-[#1e1e1e] flex items-center gap-2' onClick={() => setCurrentFile(null)}>{currentFile.name} {icon}</button>
-              <div className='flex gap-4 last:pr-4'>
-                <button title='run' onClick={() => compileCode()}><VscPlay /></button>
-                <button onClick={() => codeComplete()}><VscHubot /></button>
-                <button title='save' onClick={() => saveCode()}><VscSave /></button>
-                <button onClick={() => saveAll()}><VscSaveAll /></button>
-                <button onClick={() => formatCode()}><VscJson /></button>
-                <button onClick={() => setShowOverlay(true)}><VscRecordKeys /></button>
+              <div className='flex gap-4 last:pr-10'>
+                <button className='cursor-pointer hover:translate-y-[-1px] duration-200' title='run' onClick={() => compileCode()}><VscPlay /></button>
+                <button className='cursor-pointer hover:translate-y-[-1px] duration-200' onClick={() => codeComplete()}><VscHubot /></button>
+                <button className='cursor-pointer hover:translate-y-[-1px] duration-200' title='save' onClick={() => saveCode()}><VscSave /></button>
+                {/* <button className='cursor-pointer hover:translate-y-[-1px] duration-200' onClick={() => saveAll()}><VscSaveAll /></button> */}
+                {/* <button className='cursor-pointer hover:translate-y-[-1px] duration-200' onClick={() => formatCode()}><VscJson /></button> */}
+                <button className='cursor-pointer hover:translate-y-[-1px] duration-200' onClick={() => setShowOverlay(true)}><VscRecordKeys /></button>
               </div>
           </div>
           <Editor height='95vh' className='mt-1' value={currentFile.code} onChange={(value) => handleInput(value)} width={calculateWidth()} language={detectLanguage(currentFile.name.split('.')[1])} theme='vs-dark'/>

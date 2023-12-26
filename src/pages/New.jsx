@@ -119,7 +119,7 @@ const New = () => {
       </div>
 
       {/* createdProjects */}
-      <div className='bg-[#282828] w-[90%] mt-20 p-5'>
+      <div className='bg-[#282828] w-[90%] my-10 p-5'>
         <h3 className='text-white text-2xl mb-3'>Created Projects</h3>
         <div className='flex flex-wrap gap-5'>
           {createdProjects.map((project, idx) => {
@@ -136,6 +136,8 @@ const New = () => {
       </div>
  
       {showOverlay && (<CreateNewOverlay setName={setName} error={error} type={type} setType={setType} types={types} CreateNew={CreateNew} setShowOverlay={setShowOverlay} />)}
+
+      <Footer /> 
     </div>
   )
 }
@@ -143,8 +145,8 @@ const New = () => {
 const CreateNewOverlay = ({setName, setType, types, CreateNew, setShowOverlay, type, error}) => {
   return (
     <div className='absolute min-h-screen w-full flex items-center justify-center z-50 bg-black/80 bg-blend-overlay'>
-      <div className='p-10 bg-[#282828] flex flex-col mb-32 gap-3 md:w-[30vw]'>
-        <input autoFocus type="text" className='p-2 rounded bg-[#2a2d2e] text-white w-full' placeholder='Name' onChange={(e) => setName(e.target.value)} />
+      <div className='p-10 bg-[#282828] flex flex-col mb-32 gap-3 md:w-[30vw] w-[90vw]'>
+        <input autoFocus type="text" className='p-2 rounded bg-[#2a2d2e] text-white w-full' placeholder='Name of Project' onChange={(e) => setName(e.target.value)} />
         <select className='bg-[#37373d] rounded p-2 text-white' onChange={(e) => setType(e.target.value)} value={type} >
           <option value="">Select Template</option>
           {types.map((type, idx) => {
@@ -160,5 +162,27 @@ const CreateNewOverlay = ({setName, setType, types, CreateNew, setShowOverlay, t
     </div>
   )
 }
+
+const Footer = () => {
+  return(
+    <div className='fixed bottom-0 p-3 px-5 bg-[#282828] w-full text-white'>
+      <div className='flex justify-between'>
+        CodeFlow.
+        <div className="flex gap-3">
+          <a href="https://www.linkedin.com/in/chetan-chauhan-860106258/" target='_blank' rel='noreferrer'>
+              <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+          </a>
+          <a href="mailto:chauhanchetan12789@gmail.com" target='_blank' rel='noreferrer'>
+              <img src="https://img.shields.io/badge/Gmail-red?style=for-the-badge&logo=Gmail&logoColor=white" alt="Gmail Badge"/>
+          </a>
+          <a href="https://github.com/chetan3327" target='_blank' rel='noreferrer'>
+              <img src="https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=GitHub&logoColor=white" alt="Github Badge"/>
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 export default New
